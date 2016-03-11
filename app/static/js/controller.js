@@ -2,7 +2,7 @@
 
 
 angular.module('myApp')
-  .controller('HomeCtrl', function($scope, $http, $location) {
+  .controller('HomeCtrl', function($scope, $http, $location, dataShare) {
 
     $scope.submit = function() {
 
@@ -28,8 +28,8 @@ angular.module('myApp')
             .success(function (response) {
                 //$scope.ServerResponse = data;
                 //$location.path('/query');
-                $scope.temp = response;
-                $location.path('/query/');
+                dataShare.sendData(response);
+                $location.path('/queryOut');
             })
             .error(function (data, status, header, config) {
                 $location.path('/');
@@ -54,27 +54,27 @@ angular.module('myApp')
     $scope.arg2 = '';
 
     $scope.one = function(){
-        $scope.arg1 = 'People';
-        $scope.rel = 'Killed';
-        $scope.arg2 = 'ParisBombing';
+        $scope.arg1 = 'people';
+        $scope.rel = 'killed';
+        $scope.arg2 = 'parisBombing';
     }
 
     $scope.two = function(){
-        $scope.arg1 = 'Places';
-        $scope.rel = 'Bombed';
-        $scope.arg2 = 'ParisAttack';
+        $scope.arg1 = 'places';
+        $scope.rel = 'bombed';
+        $scope.arg2 = 'parisAttack';
     }
 
     $scope.three = function(){
-        $scope.arg1 = 'Suspects';
-        $scope.rel = 'Identified';
-        $scope.arg2 = 'ParisAttack';
+        $scope.arg1 = 'suspects';
+        $scope.rel = 'identified';
+        $scope.arg2 = 'parisAttack';
     }
 
     $scope.four = function(){
-        $scope.arg1 = 'Suspects';
-        $scope.rel = 'Nationalities';
-        $scope.arg2 = 'ParisAttack';
+        $scope.arg1 = 'suspects';
+        $scope.rel = 'nationalities';
+        $scope.arg2 = 'parisAttack';
     }
 
     $scope.check = function(){
@@ -99,7 +99,11 @@ angular.module('myApp')
   });
 
 angular.module('myApp')
-  .controller('QueryCtrl', function($scope, $http, $location) {
+  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorage) {
 
-    var param = $routeParams.param;
-  });
+    //$scope.data = ''
+    $scope.$on('data_shared',function(){
+      $scope.data = dataShare.getData();
+    });
+    //$scope.jsonify = JSON.parse($scope.data);
+});

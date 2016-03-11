@@ -9,7 +9,7 @@ myApp.config(['$routeProvider',
                  templateUrl: 'static/partials/home.html',
                  controller: 'HomeCtrl',    
              }).
-             when('/queryOut/param', {
+             when('/queryOut', {
                  templateUrl: 'static/partials/queryOut.html',
                  controller: 'QueryCtrl',
              }).
