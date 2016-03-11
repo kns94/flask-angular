@@ -1,0 +1,55 @@
+    .login-page {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+
+        background: rgb(0, 128, 43);
+
+        text-align: center;
+        color: #fff;
+
+        padding: 3em;
+
+        h1 {
+            font-weight: 300;
+            small {
+                color: rgba(255,255,255,0.7);
+            }
+    }
+
+    .form-group {
+        padding: 8px 0;
+        width: 300px;
+        padding-right: 350px;
+        padding-right: 375px;
+        padding-left: 50px;
+    }
+
+    .form-content {
+        padding: 20px;
+        color: #000;
+    }
+
+    .h4 {
+        color: #000;
+        text-align: left;
+        background: #e3e3e3;
+    }
+
+    .container{
+        background: #e3e3e3;
+        padding-left: 2em;
+    }
+
+    ol{
+        text-align: left;
+        color: black;
+    }
+
+    input{
+        text-align: right;
+    }
+}
