@@ -2,7 +2,7 @@
 
 
 angular.module('myApp')
-  .controller('HomeCtrl', function($scope, $http, $location, dataShare) {
+  .controller('HomeCtrl', function($scope, $http, $location, dataShare, localStorageService) {
 
     $scope.submit = function() {
 
@@ -28,8 +28,17 @@ angular.module('myApp')
             .success(function (response) {
                 //$scope.ServerResponse = data;
                 //$location.path('/query');
-                dataShare.sendData(response);
-                $location.path('/queryOut');
+
+                $scope.status = response.status
+                $scope.$watch('status', function () {
+                    if ($scope.status == "Error!") {
+                        $location.path('/not_found');  
+                    } else {
+                        dataShare.sendData(data);
+                        localStorageService.set('params',data);
+                        $location.path('/queryOut');
+                    }
+                });
             })
             .error(function (data, status, header, config) {
                 $location.path('/');
@@ -99,11 +108,38 @@ angular.module('myApp')
   });
 
 angular.module('myApp')
-  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorage) {
+  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorageService) {
 
-    //$scope.data = ''
-    $scope.$on('data_shared',function(){
-      $scope.data = dataShare.getData();
-    });
     //$scope.jsonify = JSON.parse($scope.data);
+    //$scope.data = ''
+    //$scope.init = function(){
+    //    $scope.data = dataShare.getData();
+    //};
+
+    $scope.params = localStorageService.get('params');
+    $scope.out = ''
+
+     $http.post('/query', $scope.params)
+            .success(function (response) {
+                //$scope.ServerResponse = data;
+                //$location.path('/query');
+
+                $scope.status = response.status
+                $scope.$watch('status', function () {
+                    if ($scope.status == "Error!") {
+                        $location.path('/not_found');  
+                    } else {
+                       $scope.out = response.data.data
+                    }
+                });
+            })
+            .error(function (data, status, header, config) {
+                $location.path('/');
+                $scope.ServerResponse = "Data: " + data +
+                    "<hr />status: " + status +
+                    "<hr />headers: " + header +
+                    "<hr />config: " + config;
+        });
+
 });
+  

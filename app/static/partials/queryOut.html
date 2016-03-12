@@ -1,10 +1,18 @@
 <div class="query-page" ng-controller="QueryCtrl">
-    <div class="row">
-      <script type="json">
-      {{data}}
-    </script>
+    <div class="row" ng-repeat="dat in out">
+        Claim_id: {{dat.claim_id}} <br/>
+        Object Key: {{dat.object_key}} <br/>
+        Parent Id: {{dat.parent_id}} <br/>
+        Property Key: {{dat.property_key} <br/>
+        Property Value: {{dat.property_value} <br/>
+        r43: {{dat.r_43} <br/>
+        r43_bool : {{dat.r43_bool}} <br/>
+        source_id : {{dat.source_id}} <br/>
+        timestamp : {{dat.timestamp}} <br/>
+        <br/><br/><br/>      
     </div>
 </div>
 
 <script src="../js/app.js"></script>
 <script src="../js/controller.js"></script>
+<script src="../js/factory.js"></script>

@@ -1,6 +1,6 @@
 'use strict';  
 
-var myApp = angular.module('myApp', ['ngRoute', 'ngAnimate']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngAnimate', 'LocalStorageModule']);
 
 myApp.config(['$routeProvider',
      function($routeProvider) {
@@ -12,6 +12,9 @@ myApp.config(['$routeProvider',
              when('/queryOut', {
                  templateUrl: 'static/partials/queryOut.html',
                  controller: 'QueryCtrl',
+             }).
+             when('/not_found', {
+                 templateUrl: 'static/partials/404.html',
              }).
              otherwise({
                  redirectTo: '/'
