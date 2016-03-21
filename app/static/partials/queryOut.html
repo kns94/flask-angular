@@ -1,18 +1,49 @@
-<div class="query-page" ng-controller="QueryCtrl">
-    <div class="row" ng-repeat="dat in out">
-        Claim_id: {{dat.claim_id}} <br/>
-        Object Key: {{dat.object_key}} <br/>
-        Parent Id: {{dat.parent_id}} <br/>
-        Property Key: {{dat.property_key} <br/>
-        Property Value: {{dat.property_value} <br/>
-        r43: {{dat.r_43} <br/>
-        r43_bool : {{dat.r43_bool}} <br/>
-        source_id : {{dat.source_id}} <br/>
-        timestamp : {{dat.timestamp}} <br/>
-        <br/><br/><br/>      
+<div class="query-page" ng-controller="QueryCtrl" ng-model-options="{debounce: 800 }">
+
+    <form ng-submit="submit()">
+        <input type="text" ng-model="arg1" id="arg1" placeholder="Argument1">
+
+        <div class="form-group" style="width: 220px;">
+            <input type="text" ng-model="rel" id="rel" placeholder="Relation">
+        </div>
+
+        <div class="form-group" style="width: 220px;">
+            <input type="text" ng-model="arg2" id="arg2" placeholder="Argument2">
+        </div>
+        <button type="submit" ng-disabled="check()">Search</button>
+    </form>
+    <br/> 
+
+    <div ng-if="result === 'False'">
+    Loading Result ..
+    </div>
+
+    <div ng-if="result ==='True'">
+        <div class="row" ng-repeat="dat in out">
+
+            <!--Claim_id: {{dat.claim_id}} <br/>
+            Object Key: {{dat.object_key}} <br/>
+            Parent Id: {{dat.parent_id}} <br/>
+            timestamp : {{dat.timestamp}} <br/>
+            <a href = {{dat.link}}>{{dat.link}}</a><br/>
+            <font color = {{dat.color}}> Color: {{dat.color}} </font> <br/>
+        
+            sources : {{dat.source_id}} <br/> 
+            <a href = {{dat.link}}>{{dat.link}}</a><br/> </font> -->
+
+            <font color = {{dat.color}}> 
+            {{dat.unique_key}}: {{dat.property_value}} <br/>
+            Normalized: {{dat.normalized}} <br/>
+            <div class = 'column' ng-repeat = "sources in dat.combined_sources">
+                <a target="_blank" href = {{sources.source_link}}>{{sources.id}}</a><br/>
+            </div>
+            <br/>
+            </font>
+        </div>
     </div>
 </div>
 
 <script src="../js/app.js"></script>
 <script src="../js/controller.js"></script>
 <script src="../js/factory.js"></script>
+<script src="../js/service.js"></script>

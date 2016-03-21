@@ -2,7 +2,7 @@
 
 
 angular.module('myApp')
-  .controller('HomeCtrl', function($scope, $http, $location, dataShare, localStorageService) {
+  .controller('HomeCtrl', function($scope, $http, $location, dataShare, localStorageService, $timeout) {
 
     $scope.submit = function() {
 
@@ -36,7 +36,10 @@ angular.module('myApp')
                     } else {
                         dataShare.sendData(data);
                         localStorageService.set('params',data);
-                        $location.path('/queryOut');
+                        $timeout(function() {
+                            $location.path('/queryOut');
+                        }, 1500);
+                        //$location.path('/queryOut');
                     }
                 });
             })
@@ -108,28 +111,95 @@ angular.module('myApp')
   });
 
 angular.module('myApp')
-  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorageService) {
-
-    //$scope.jsonify = JSON.parse($scope.data);
-    //$scope.data = ''
-    //$scope.init = function(){
-    //    $scope.data = dataShare.getData();
-    //};
+  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorageService, $timeout) {
 
     $scope.params = localStorageService.get('params');
     $scope.out = ''
+    $scope.arg1 = $scope.params.arg1;
+    $scope.rel = $scope.params.rel;
+    $scope.arg2 = $scope.params.arg2;
+    $scope.result = 'False';
+    call();
 
-     $http.post('/query', $scope.params)
+    function call(){
+        $http.post('/query', $scope.params)
             .success(function (response) {
-                //$scope.ServerResponse = data;
-                //$location.path('/query');
 
-                $scope.status = response.status
-                $scope.$watch('status', function () {
-                    if ($scope.status == "Error!") {
+                $scope.response = response
+                $scope.$watch('response', function () {
+                    if ($scope.response.status == "Error!") {
+                        $location.path('/not_found');  
+                    } else { 
+                        if($scope.response.data.length > 0){
+                            $scope.out = response.data
+                            $scope.result = 'True';
+                        }
+                        else{
+                            $timeout(call(), 2000);
+                        }
+                    }
+                });
+            })
+            .error(function (data, status, header, config) {
+                $location.path('/');
+                $scope.ServerResponse = "Data: " + data +
+                    "<hr />status: " + status +
+                    "<hr />headers: " + header +
+                    "<hr />config: " + config;
+        });
+    }
+
+    $scope.check = function(){
+        if($scope.arg1.length < 1 && $scope.arg2.length < 1){
+            return true;
+        }
+        else{
+            if($scope.arg1.length < 1 && $scope.rel.length < 1){
+                return true;
+            }
+            else{
+                if($scope.arg2.length < 1 && $scope.rel.length < 1){
+                    return true;
+                } 
+                else{
+                    return false;
+                }             
+            }
+        }
+    }  
+
+
+    $scope.submit = function() {
+
+        var data = {
+            'arg1': $scope.arg1,
+            'arg2': $scope.arg2,
+            'rel': $scope.rel
+        }
+
+        var config = {
+            headers : {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        }
+
+        $http.post('/query', data)
+            .success(function (response) {
+
+                $scope.response = response
+                $scope.$watch('response', function () {
+                    if ($scope.response.status == "Error!") {
                         $location.path('/not_found');  
                     } else {
-                       $scope.out = response.data.data
+                        dataShare.sendData(data);
+                        localStorageService.set('params',data);
+                        if($scope.response.data.length > 0){
+                            $scope.out = $scope.response.data
+                        }else{
+                            $timeout(function() {
+                                $scope.out = $scope.response.data
+                            }, 3000);
+                        }
                     }
                 });
             })
@@ -141,5 +211,5 @@ angular.module('myApp')
                     "<hr />config: " + config;
         });
 
+    }; 
 });
-  

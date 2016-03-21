@@ -25,7 +25,7 @@ def create_runset():
         hash_key = '{0}_{1}_{2}'.format(arg1, rel, arg2)
 
         runset_id = RedisCache.fetchValue(hash_name, hash_key, 'runset_id')
-        print 'runset_id: '+runset_id
+        #print 'runset_id: '+runset_id
 
         if runset_id == 'None':
             modler = RunsetModels()
