@@ -15,17 +15,17 @@ def upload():
     if request.method == 'GET':
         return jsonify({'status': 'Error!', 'message': 'Please use POST request'})
     else:
-        data = request.get_json(silent = True)
-        arg1 = data['arg1']
-        rel = data['rel']
-        arg2 = data['arg2']
+        data = session['data']
+        arg1 = data['arg1'].lower()
+        rel = data['rel'].lower()
+        arg2 = data['arg2'].lower()
+        arg2 = arg2.replace(' ','')
 
         hash_name = 'dataset_map'
         hash_key = '{0}_{1}_{2}'.format(arg1, rel, arg2)
 
         modler = DatasetModels()
         current_ids = modler.fetch_ids('claims')
-        #print current_ids
 
         url = RedisCache.fetchValue(hash_name, hash_key, 'dataset_url')
 
@@ -38,7 +38,6 @@ def upload():
                 return jsonify({'status': 'Error!', 'message': 'Dataset Uploaded'})
             else:
                 new_ids = modler.fetch_ids('claims')
-                #print new_ids
                 latest_id = list(set(new_ids) - set(current_ids))
                 RedisCache.createHash(hash_name, hash_key, {'dataset_id': latest_id[0]})
                 RedisCache.createHash('runset_map', hash_key, {'dataset_id': latest_id[0]})

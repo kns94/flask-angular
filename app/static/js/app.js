@@ -1,6 +1,6 @@
 'use strict';  
 
-var myApp = angular.module('myApp', ['ngRoute', 'ngAnimate', 'LocalStorageModule']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngAnimate', 'LocalStorageModule', 'ui.bootstrap']);
 
 myApp.config(['$routeProvider',
      function($routeProvider) {

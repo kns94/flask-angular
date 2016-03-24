@@ -16,16 +16,18 @@ def create_runset():
     if request.method != 'POST':
         return jsonify({'status': 'Error!', 'message': 'Please use POST request'})
     else:
-        data = request.get_json(silent = True)
-        arg1 = data['arg1']
-        rel = data['rel']
-        arg2 = data['arg2']
+
+        data = session['data']
+        arg1 = data['arg1'].lower()
+        rel = data['rel'].lower()
+        arg2 = data['arg2'].lower()
+        arg2 = arg2.replace(' ','')
 
         hash_name = 'runset_map'
+
         hash_key = '{0}_{1}_{2}'.format(arg1, rel, arg2)
 
         runset_id = RedisCache.fetchValue(hash_name, hash_key, 'runset_id')
-        #print 'runset_id: '+runset_id
 
         if runset_id == 'None':
             modler = RunsetModels()
@@ -34,17 +36,13 @@ def create_runset():
             checked_algo = ast.literal_eval(RedisCache.fetchValue(hash_name, hash_key, 'checked_algo'))
             general_config = ast.literal_eval(RedisCache.fetchValue(hash_name, hash_key, 'general_config'))
             dataset_id = ast.literal_eval(RedisCache.fetchValue(hash_name, hash_key, 'dataset_id'))
-
             status = modler.create_runset(dataset_id, checked_algo, general_config)
-            #print status
 
             if status != 200:
                 return jsonify({'status': 'Error!', 'message': 'Could not create runset'})
             else:        
                 new_ids = modler.fetch_ids()
-                #print new_ids
                 latest_id = list(set(new_ids) - set(current_ids))
-                #print latest_id
                 RedisCache.createHash(hash_name, hash_key, {'runset_id': latest_id[0]})
                 return redirect(url_for('result.show_result'), code=307)
                 #return jsonify({'status': 'Success!', 'message': 'Runset created', 'runset_id': latest_id[0]})

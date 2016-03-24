@@ -6,16 +6,8 @@ angular.module('myApp')
 
     $scope.submit = function() {
 
-        $scope.out = {
-            'argument1': $scope.arg1,
-            'relation': $scope.rel,
-            'argument2': $scope.arg2,
-        };
-
         var data = {
-            'arg1': $scope.arg1,
-            'arg2': $scope.arg2,
-            'rel': $scope.rel
+            'query': $scope.searchBox
         }
 
         var config = {
@@ -26,9 +18,7 @@ angular.module('myApp')
 
         $http.post('/query', data)
             .success(function (response) {
-                //$scope.ServerResponse = data;
-                //$location.path('/query');
-
+             
                 $scope.status = response.status
                 $scope.$watch('status', function () {
                     if ($scope.status == "Error!") {
@@ -38,8 +28,7 @@ angular.module('myApp')
                         localStorageService.set('params',data);
                         $timeout(function() {
                             $location.path('/queryOut');
-                        }, 1500);
-                        //$location.path('/queryOut');
+                        }, 500);
                     }
                 });
             })
@@ -51,63 +40,12 @@ angular.module('myApp')
                     "<hr />config: " + config;
         });
 
-
-        //$scope.dat = {
-        //    'one': '1';
-        //}
-       
-        //$location.path('/dashboard');
-        
-        //return false;
     };
 
-    $scope.arg1 = '';
-    $scope.rel = '';
-    $scope.arg2 = '';
+    var _selected;
 
-    $scope.one = function(){
-        $scope.arg1 = 'people';
-        $scope.rel = 'killed';
-        $scope.arg2 = 'parisBombing';
-    }
-
-    $scope.two = function(){
-        $scope.arg1 = 'places';
-        $scope.rel = 'bombed';
-        $scope.arg2 = 'parisAttack';
-    }
-
-    $scope.three = function(){
-        $scope.arg1 = 'suspects';
-        $scope.rel = 'identified';
-        $scope.arg2 = 'parisAttack';
-    }
-
-    $scope.four = function(){
-        $scope.arg1 = 'suspects';
-        $scope.rel = 'nationalities';
-        $scope.arg2 = 'parisAttack';
-    }
-
-    $scope.check = function(){
-        if($scope.arg1.length < 1 && $scope.arg2.length < 1){
-            return true;
-        }
-        else{
-            if($scope.arg1.length < 1 && $scope.rel.length < 1){
-                return true;
-            }
-            else{
-                if($scope.arg2.length < 1 && $scope.rel.length < 1){
-                    return true;
-                } 
-                else{
-                    return false;
-                }             
-            }
-        }
-    }   
-
+    $scope.selected = undefined;
+      $scope.queries = ['People killed in Paris Bombing', 'People killed in Bamako Shooting'];
   });
 
 angular.module('myApp')
@@ -115,9 +53,7 @@ angular.module('myApp')
 
     $scope.params = localStorageService.get('params');
     $scope.out = ''
-    $scope.arg1 = $scope.params.arg1;
-    $scope.rel = $scope.params.rel;
-    $scope.arg2 = $scope.params.arg2;
+    $scope.searchBox = $scope.params.query
     $scope.result = 'False';
     call();
 
@@ -126,19 +62,20 @@ angular.module('myApp')
             .success(function (response) {
 
                 $scope.response = response
-                $scope.$watch('response', function () {
-                    if ($scope.response.status == "Error!") {
+
+                if ($scope.response.status == "Error!") {
                         $location.path('/not_found');  
                     } else { 
-                        if($scope.response.data.length > 0){
+                        if($scope.response.data.length != 0){
                             $scope.out = response.data
                             $scope.result = 'True';
                         }
                         else{
-                            $timeout(call(), 2000);
+                            if($scope.response.data.length == 0){
+                                $timeout(call(), 1000);
+                            } 
                         }
                     }
-                });
             })
             .error(function (data, status, header, config) {
                 $location.path('/');
@@ -149,32 +86,10 @@ angular.module('myApp')
         });
     }
 
-    $scope.check = function(){
-        if($scope.arg1.length < 1 && $scope.arg2.length < 1){
-            return true;
-        }
-        else{
-            if($scope.arg1.length < 1 && $scope.rel.length < 1){
-                return true;
-            }
-            else{
-                if($scope.arg2.length < 1 && $scope.rel.length < 1){
-                    return true;
-                } 
-                else{
-                    return false;
-                }             
-            }
-        }
-    }  
-
-
     $scope.submit = function() {
 
         var data = {
-            'arg1': $scope.arg1,
-            'arg2': $scope.arg2,
-            'rel': $scope.rel
+            'query': $scope.searchBox
         }
 
         var config = {
@@ -198,7 +113,7 @@ angular.module('myApp')
                         }else{
                             $timeout(function() {
                                 $scope.out = $scope.response.data
-                            }, 3000);
+                            }, 500);
                         }
                     }
                 });
@@ -212,4 +127,10 @@ angular.module('myApp')
         });
 
     }; 
+
+    var _selected;
+
+    $scope.selected = undefined;
+    $scope.queries = ['People killed in Paris Bombing', 'People killed in Bamako Shooting'];
+   
 });
