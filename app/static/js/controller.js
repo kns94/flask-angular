@@ -49,12 +49,13 @@ angular.module('myApp')
   });
 
 angular.module('myApp')
-  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorageService, $timeout) {
+  .controller('QueryCtrl', function($scope, $http, $location, dataShare, localStorageService, $timeout, $sce, $uibModal) {
 
     $scope.params = localStorageService.get('params');
     $scope.out = ''
     $scope.searchBox = $scope.params.query
     $scope.result = 'False';
+    //$scope.current = '';
     call();
 
     function call(){
@@ -132,5 +133,15 @@ angular.module('myApp')
 
     $scope.selected = undefined;
     $scope.queries = ['People killed in Paris Bombing', 'People killed in Bamako Shooting'];
+
+    $scope.linkClick = function(link){
+        $scope.current = $sce.trustAsResourceUrl(link);
+    };
    
+    $scope.popup = function (link){
+                var uibModalInstance = $uibModal.open({
+                    templateUrl: 'index.html',
+                });
+    }
+    
 });

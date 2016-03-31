@@ -1,9 +1,9 @@
 <html>
-    <div ng-controller="QueryCtrl" ng-model-options="{debounce: 500}">
+    <div ng-controller="QueryCtrl" ng-model-options="{debounce: 500}" ng-app = "myApp">
         <div id='cssmenu' align="right">
             <ul>
                 <a href="#" class="pull-left"><img src="/../static/img/qcri-test.jpg"></a>
-                <li class='active'><a href='http://localhost:8000/#/'><span>Home</span></a></li>
+                <li><a href='http://localhost:8000/#/'><span>Home</span></a></li>
                <li><a href='http://dafna.qcri.org/users/sign_in'><span>Login/Register</span></a></li>
                <li><a href='#'><span>Publications</span></a></li>
                <li><a href='#'><span>Acknowledgement</span></a></li>
@@ -20,23 +20,23 @@
         </div>
 
             <br/> 
-
+            <div>
+            <iframe ng-src='{{current}}' width="500" height="600" align="right"></iframe> 
+            </div>
             <div ng-if="result === 'False'">
             Loading Result ..
             </div>
 
             <div ng-if="result ==='True'">
                 <div ng-repeat="dat in out">
-
-                    <font color = {{dat.color}}> 
-                    {{dat.unique_key}}: {{dat.property_value}} <br/>
-                    Normalized: {{dat.normalized}} <br/>
-                    <a target="_blank" href = {{dat.link}}> Allegator Link </a><br/>
-                    <div class = 'column' ng-repeat = "sources in dat.combined_sources">
-                        <a target="_blank" href = {{sources.source_link}}>{{sources.id}}</a><br/>
-                    </div>
-                    <br/>
-                    </font>
+                        <font color = {{dat.color}} size = '4'> 
+                        {{dat.unique_key}}: {{dat.property_value}} <br/>
+                        Sources: <br/>
+                        <div ng-repeat = "sources in dat.combined_sources">
+                        <a ng-click='linkClick(sources.source_link)'>{{sources.id}}</a>
+                        </div>
+                        <a target="_blank" href = {{dat.link}}> Allegator Link </a> <br/> <br/>
+                        </font>
                 </div>
             </div>
         </div>
