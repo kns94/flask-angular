@@ -4,12 +4,13 @@ Models pertaining to dataset
 
 import requests
 import json
+import os
 
 class DatasetModels:
 
     def __init__(self):
-        self.user_token = 'fHRCD4f1ZLFsUN4DAqmm'
-
+        self.user_token = os.environ.get("USER_TOKEN", None)
+        
     def fetch_ids(self, dataset_type):
         r = requests.get("http://localhost:4000/datasets", data = {'user_token': self.user_token, 'kind': dataset_type})
         data = r.json()

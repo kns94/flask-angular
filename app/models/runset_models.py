@@ -3,12 +3,14 @@ Models pertaining to a runset
 '''
 
 import requests, json
+import os
 
 
 class RunsetModels:
 
     def __init__(self):
-        self.user_token = 'fHRCD4f1ZLFsUN4DAqmm'
+        self.user_token = os.environ.get("USER_TOKEN", None)
+        #self.user_token = 'fHRCD4f1ZLFsUN4DAqmm'
 
     def fetch_ids(self):
         r = requests.get("http://localhost:4000/runsets", data = {'user_token': self.user_token})

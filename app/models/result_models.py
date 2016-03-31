@@ -2,13 +2,14 @@
 Models pertaining to a runset result
 '''
 
+import os
 import requests, json
 
 
 class ResultModels:
 
     def __init__(self):
-        self.user_token = 'fHRCD4f1ZLFsUN4DAqmm'
+        self.user_token = os.environ.get("USER_TOKEN", None)
    
     def show_result(self, runset_id):
         url = "http://localhost:4000/runsets/"+str(runset_id)+"/results"
